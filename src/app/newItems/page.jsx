@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "../../context/AuthContext"
 import { useTheme } from "../../context/ThemeContext"
 import { useEffect, useState } from "react"
-import Pagination from "../../components/Pagination"
+import Pagination from "../../components/pagination"
 import SearchBar from "../../components/SearchBar"
 import EditItemModal from "../../components/editModalItem"
 
