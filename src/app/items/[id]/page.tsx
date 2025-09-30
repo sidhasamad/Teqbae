@@ -19,15 +19,28 @@ export default function ItemDetailPage() {
       router.push('/login')
       return
     }
-    if(params?.id){
+    
+    // Check if params exists and has id
+    if (params && params.id) {
       fetchItem()
+    } else {
+      setError('Invalid item ID')
+      setLoading(false)
     }
-  }, [user, router, params?.id])
+  }, [user, router, params])
 
   const fetchItem = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${params.id}`)
+      setError('')
+      
+      // Add null check for params.id
+      const itemId = params?.id
+      if (!itemId) {
+        throw new Error('Item ID not found')
+      }
+      
+      const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${itemId}`)
       
       if (!response.ok) {
         throw new Error('Item not found')
@@ -42,8 +55,6 @@ export default function ItemDetailPage() {
       setLoading(false)
     }
   }
-
-
 
   if (loading) {
     return (
@@ -73,6 +84,15 @@ export default function ItemDetailPage() {
             Back to Items
           </button>
         </div>
+      </div>
+    )
+  }
+
+  // Add null check for item before rendering
+  if (!item) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-xl">Item not found</div>
       </div>
     )
   }
