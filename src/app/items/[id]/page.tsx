@@ -19,8 +19,10 @@ export default function ItemDetailPage() {
       router.push('/login')
       return
     }
-    fetchItem()
-  }, [user, router, params.id])
+    if(params?.id){
+      fetchItem()
+    }
+  }, [user, router, params?.id])
 
   const fetchItem = async () => {
     try {
@@ -41,13 +43,7 @@ export default function ItemDetailPage() {
     }
   }
 
-  if (!user) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-xl">Redirecting to login...</div>
-      </div>
-    )
-  }
+
 
   if (loading) {
     return (
