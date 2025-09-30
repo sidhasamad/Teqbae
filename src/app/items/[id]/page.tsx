@@ -20,7 +20,6 @@ export default function ItemDetailPage() {
       return
     }
     
-    // Check if params exists and has id
     if (params && params.id) {
       fetchItem()
     } else {
@@ -34,7 +33,6 @@ export default function ItemDetailPage() {
       setLoading(true)
       setError('')
       
-      // Add null check for params.id
       const itemId = params?.id
       if (!itemId) {
         throw new Error('Item ID not found')
@@ -108,7 +106,7 @@ export default function ItemDetailPage() {
         </Link>
         
         <button
-          onClick={() => router.push(`/add-item?edit=${item.id}`)}
+          onClick={() => router.push(`/add-item?edit=${item?.id || ''}`)}
           className={`px-4 py-2 rounded-lg transition-colors duration-300 ${themeClasses.button.primary}`}
         >
           Edit Item
@@ -116,18 +114,18 @@ export default function ItemDetailPage() {
       </div>
       
       <div className={`p-6 border rounded-lg shadow-sm ${themeClasses.card} ${themeClasses.border}`}>
-        <h1 className="text-3xl font-bold mb-4">{item.title}</h1>
-        <p className="text-lg leading-relaxed opacity-90 mb-6">{item.body}</p>
+        <h1 className="text-3xl font-bold mb-4">{item?.title}</h1>
+        <p className="text-lg leading-relaxed opacity-90 mb-6">{item?.body}</p>
         
         <div className="mt-6 pt-6 border-t opacity-60">
           <div className="grid md:grid-cols-2 gap-4 text-sm">
             <div>
               <strong className="block mb-1">Item ID:</strong>
-              <span>{item.id}</span>
+              <span>{item?.id}</span>
             </div>
             <div>
               <strong className="block mb-1">User ID:</strong>
-              <span>{item.userId}</span>
+              <span>{item?.userId}</span>
             </div>
           </div>
         </div>
