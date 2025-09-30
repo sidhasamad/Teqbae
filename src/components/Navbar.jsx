@@ -19,11 +19,9 @@ export default function Header() {
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           
-          {/* Logo/Brand */}
           <div className="flex items-center space-x-8">
             
 
-            {/* Theme Toggle */}
             <div className="flex items-center space-x-3">
               <ThemeToggle />
               <span className={`text-sm font-medium hidden md:block ${
@@ -34,24 +32,10 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Navigation Links */}
           <nav className="flex items-center space-x-1">
             {user ? (
               <>
-                {/* <NavLink href="/dashboard" theme={theme} icon="📊">
-                  Dashboard
-                </NavLink>
-                <NavLink href="/items" theme={theme} icon="📦">
-                  Items
-                </NavLink>
-                <NavLink href="/addItem" theme={theme} icon="➕">
-                  Add Item
-                </NavLink>
-                <NavLink href="/newItems" theme={theme} icon="🎯">
-                  My Items
-                </NavLink> */}
-                
-                {/* User Info & Logout */}
+               
                 <div className="flex items-center space-x-4 ml-4 pl-4">
                   <span className={`text-sm font-medium px-3 py-1 rounded-full ${
                     theme === 'light' 

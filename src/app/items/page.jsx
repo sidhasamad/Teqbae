@@ -18,7 +18,6 @@ export default function DashboardPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const postsPerPage = 5
 
-  // Redirect to login if not authenticated
   useEffect(() => {
     if (!user) {
       router.push('/login')
@@ -79,14 +78,7 @@ export default function DashboardPage() {
         Welcome back, {user?.name}!
       </p>
 
-      {/* Search Bar (commented out but styled if you enable it) */}
-      {/* <div className={`p-4 rounded-lg border ${
-        theme === 'dark' 
-          ? 'bg-black border-gray-700' 
-          : 'bg-white border-blue-200'
-      }`}>
-        <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-      </div> */}
+
 
       <div className="grid gap-4">
         {currentPosts.map(post => (

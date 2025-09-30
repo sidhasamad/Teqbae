@@ -3,14 +3,13 @@ import { createContext, useContext, useState } from 'react'
 
 const ThemeContext = createContext()
 
-export function ThemeProvider({ children }) {
+export default function ThemeProvider({ children }) {
   const [theme, setTheme] = useState('light')
 
   const toggleTheme = () => {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light')
   }
 
-  // Theme classes for different elements
   const themeClasses = {
     background: theme === 'dark' ? 'bg-black' : 'bg-white',
     text: theme === 'dark' ? 'text-white' : 'text-blue-900',

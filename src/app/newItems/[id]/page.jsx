@@ -6,7 +6,7 @@ import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 
 export default function MyItemDetailPage() {
-  const { user, items } = useAuth() // Using items from AuthContext
+  const { user, items } = useAuth() 
   console.log("All items:", items);
   
   const { theme, themeClasses } = useTheme()
@@ -24,7 +24,6 @@ export default function MyItemDetailPage() {
     const itemId = parseInt(params.id)
     console.log("Looking for item with ID:", itemId);
     
-    // Safe access to items
     const safeItems = Array.isArray(items) ? items : []
     const foundItem = safeItems.find(item => item.id === itemId)
     
@@ -52,7 +51,6 @@ export default function MyItemDetailPage() {
     )
   }
 
-  // Show not found if item is still null after loading
   if (!item) {
     return (
       <div className="max-w-4xl mx-auto space-y-6">
@@ -80,7 +78,6 @@ export default function MyItemDetailPage() {
     )
   }
 
-  // Only render the item details when item is not null
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex justify-between items-center">

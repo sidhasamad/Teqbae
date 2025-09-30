@@ -9,7 +9,6 @@ export default function EditItemModal({ isOpen, onClose, item }) {
   const { themeClasses } = useTheme()
   const { register, handleSubmit, formState: { errors }, setValue, reset } = useForm()
 
-  // Reset form when item changes or modal opens
   useEffect(() => {
     if (item && isOpen) {
       setValue('title', item.title || '')
@@ -33,14 +32,12 @@ export default function EditItemModal({ isOpen, onClose, item }) {
     onClose()
   }
 
-  // Close modal when clicking outside
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) {
       handleClose()
     }
   }
 
-  // Close modal on Escape key
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === 'Escape' && isOpen) {

@@ -86,7 +86,6 @@ export default function ItemDetailPage() {
     )
   }
 
-  // Add null check for item before rendering
   if (!item) {
     return (
       <div className="flex justify-center items-center h-64">
