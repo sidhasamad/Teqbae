@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
 import ThemeToggle from '../components/Theme'
 
-export default function Header() {
+export default function Navbar() {
   const { user, logout } = useAuth()
   const { theme } = useTheme()
 

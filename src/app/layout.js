@@ -2,7 +2,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { AuthProvider } from '../context/AuthContext'
 import { ThemeProvider } from '../context/ThemeContext'
-import Header from '../components/Navbar'
+import Navbar from '../components/Navbar'
 const inter = Inter({ subsets: ['latin'] })
 
 
@@ -13,7 +13,7 @@ export default function Layout({ children }) {
       <body className={inter.className}>
         <ThemeProvider>
           <AuthProvider>
-            <Header />
+            <Navbar />
             <main className="container mx-auto p-4">
               {children}
             </main>
