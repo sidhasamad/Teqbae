@@ -9,22 +9,37 @@ import { useTheme } from '../../context/ThemeContext'
 import { useRouter } from 'next/navigation'
 
 export default function DashboardPage() {
-  const { user, items } = useAuth()
+  const { user, items, loading: authLoading } = useAuth()
   const { theme } = useTheme()
   const router = useRouter()
+  
+  const [currentPage, setCurrentPage] = useState(1)
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState('')
   const postsPerPage = 5
 
   useEffect(() => {
-    if (!user) {
+    if (!authLoading && !user) {
       router.push('/login')
       return
     }
     fetchPosts()
-  }, [user, router])
+  }, [user, router, authLoading])
+
+  // Get page from URL on client side only
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const pageFromUrl = urlParams.get('page')
+      if (pageFromUrl) {
+        const pageNum = parseInt(pageFromUrl)
+        if (pageNum !== currentPage) {
+          setCurrentPage(pageNum)
+        }
+      }
+    }
+  }, [])
 
   const fetchPosts = async () => {
     try {
@@ -37,6 +52,33 @@ export default function DashboardPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
+    
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href)
+      url.searchParams.set('page', page.toString())
+      window.history.replaceState({}, '', url.toString())
+    }
+  }
+
+  const handleEdit = (postId, e) => {
+    e.stopPropagation() 
+    router.push(`/items/${postId}?edit=true`)
+  }
+
+  const handleView = (postId) => {
+    router.push(`/items/${postId}`)
+  }
+
+  if (authLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-xl">Loading...</div>
+      </div>
+    )
   }
 
   if (!user) {
@@ -78,31 +120,96 @@ export default function DashboardPage() {
         Welcome back, {user?.name}!
       </p>
 
-
-
-      <div className="grid gap-4">
-        {currentPosts.map(post => (
-          <div
-            key={post.id}
-            className={`p-6 rounded-lg border transition-all duration-300 cursor-pointer hover:shadow-lg ${
-              theme === 'dark'
-                ? 'bg-black border-gray-700 text-white hover:border-gray-500'
-                : 'bg-white border-blue-200 text-blue-900 hover:border-blue-400'
-            }`}
-            onClick={() => router.push(`/items/${post.id}`)}
-          >
-            <h3 className={`font-semibold text-lg mb-3 ${
-              theme === 'dark' ? 'text-white' : 'text-blue-800'
+      {/* Table */}
+      <div className={`rounded-lg border overflow-hidden ${
+        theme === 'dark'
+          ? 'bg-black border-gray-700'
+          : 'bg-white border-blue-200'
+      }`}>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className={`${
+              theme === 'dark' ? 'bg-gray-800' : 'bg-blue-50'
             }`}>
-              {post.title}
-            </h3>
-            <p className={`${
-              theme === 'dark' ? 'text-gray-300' : 'text-blue-700'
-            }`}>
-              {post.body}
-            </p>
+              <tr>
+                <th className={`px-4 py-3 text-left text-sm font-semibold ${
+                  theme === 'dark' ? 'text-white' : 'text-blue-900'
+                }`}>
+                  ID
+                </th>
+                <th className={`px-4 py-3 text-left text-sm font-semibold ${
+                  theme === 'dark' ? 'text-white' : 'text-blue-900'
+                }`}>
+                  Title
+                </th>
+                <th className={`px-4 py-3 text-left text-sm font-semibold ${
+                  theme === 'dark' ? 'text-white' : 'text-blue-900'
+                }`}>
+                  Content
+                </th>
+                <th className={`px-4 py-3 text-left text-sm font-semibold ${
+                  theme === 'dark' ? 'text-white' : 'text-blue-900'
+                }`}>
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentPosts.map((post, index) => (
+                <tr 
+                  key={post.id}
+                  className={`cursor-pointer transition-colors duration-200 ${
+                    theme === 'dark'
+                      ? 'hover:bg-gray-800 border-b border-gray-700'
+                      : 'hover:bg-blue-50 border-b border-blue-100'
+                  }`}
+                  onClick={() => handleView(post.id)}
+                >
+                  <td className={`px-4 py-3 text-sm ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                  }`}>
+                    {post.id}
+                  </td>
+                  <td className={`px-4 py-3 text-sm font-medium ${
+                    theme === 'dark' ? 'text-white' : 'text-blue-900'
+                  }`}>
+                    <div className="max-w-xs" title={post.title}>
+                      {post.title}
+                    </div>
+                  </td>
+                  <td className={`px-4 py-3 text-sm ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                  }`}>
+                    <div className="max-w-md" title={post.body}>
+                      {post.body}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <button
+                      onClick={(e) => handleEdit(post.id, e)}
+                      className={`px-3 py-1 rounded text-sm font-medium transition-colors duration-200 ${
+                        theme === 'dark'
+                          ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                          : 'bg-blue-500 hover:bg-blue-600 text-white'
+                      }`}
+                    >
+                      Edit
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Empty State */}
+        {currentPosts.length === 0 && (
+          <div className={`text-center py-12 ${
+            theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+          }`}>
+            <p className="text-lg">No posts found</p>
           </div>
-        ))}
+        )}
       </div>
 
       <div className={`p-4 rounded-lg border ${
@@ -114,7 +221,7 @@ export default function DashboardPage() {
           currentPage={currentPage}
           totalItems={filteredPosts.length}
           itemsPerPage={postsPerPage}
-          onPageChange={setCurrentPage}
+          onPageChange={handlePageChange}
         />
       </div>
     </div>

@@ -83,7 +83,6 @@ export default function MyItemsPage(){
         </div>
 
 
-        {/* Search Bar */}
         <div className={`p-4  ${
           theme === 'dark'
             ? 'bg-black border-gray-700'

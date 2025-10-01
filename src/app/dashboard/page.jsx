@@ -69,11 +69,7 @@ export default function DashboardPage() {
         }`}>
           Welcome to Dashboard
         </h1>
-        <p className={`text-xl ${
-          theme === 'dark' ? 'text-gray-300' : 'text-blue-700'
-        }`}>
-          Hello, {user?.name}! 👋 Here's your overview
-        </p>
+       
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

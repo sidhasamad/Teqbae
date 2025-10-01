@@ -1,8 +1,9 @@
 
 
+
 'use client'
 
-import { createContext, useState, useContext } from "react"
+import { createContext, useState, useContext, useEffect } from "react"
 
 const AuthContext = createContext()
 
@@ -26,13 +27,47 @@ const initialItems = [
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true) 
   const [items, setItems] = useState([]) 
+
+  useEffect(() => {
+    const loadFromStorage = () => {
+      try {
+        const savedUser = localStorage.getItem('user')
+        if (savedUser) {
+          setUser(JSON.parse(savedUser))
+        }
+
+        const savedItems = localStorage.getItem('userItems')
+        if (savedItems) {
+          setItems(JSON.parse(savedItems))
+        } else {
+          setItems(initialItems)
+        }
+      } catch (error) {
+        console.error('Error loading from localStorage:', error)
+        setItems(initialItems)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadFromStorage()
+  }, [])
+
+  useEffect(() => {
+    if (items.length > 0) {
+      localStorage.setItem('userItems', JSON.stringify(items))
+    }
+  }, [items])
 
   const login = async (credentials) => {
     try {
       setLoading(true)
-      const foundUser = mockUsers.find(u => u.email === credentials.email && u.password === credentials.password)
+      const foundUser = mockUsers.find(u => 
+        u.email === credentials.email && u.password === credentials.password
+      )
+      
       if (foundUser) {
         const userData = {
           id: foundUser.id,
@@ -40,6 +75,7 @@ export function AuthProvider({ children }) {
           email: foundUser.email
         }
         setUser(userData)
+        localStorage.setItem('user', JSON.stringify(userData))
         return { success: true }
       } else {
         throw new Error("Invalid email or password")
@@ -53,13 +89,15 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     setUser(null)
+    localStorage.removeItem('user')
   }
 
   const addItem = (newItem) => {
     const itemWithId = {
       ...newItem,
       id: Date.now(),
-      userId: user?.id || 1
+      userId: user?.id || 1,
+      createdAt: new Date().toISOString()
     }
     setItems(prev => [itemWithId, ...prev])
     return itemWithId
@@ -67,7 +105,7 @@ export function AuthProvider({ children }) {
 
   const updateItem = (itemId, updatedItem) => {
     setItems(prev => prev.map(item => 
-      item.id === itemId ? { ...item, ...updatedItem } : item
+      item.id === itemId ? { ...item, ...updatedItem, updatedAt: new Date().toISOString() } : item
     ))
   }
 

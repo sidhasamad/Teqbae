@@ -1,4 +1,8 @@
+
+
 'use client'
+import { useState, useEffect } from 'react'
+
 export default function Pagination({ currentPage, totalItems, itemsPerPage, onPageChange }) {
   const totalPages = Math.ceil(totalItems / itemsPerPage)
 
@@ -11,7 +15,6 @@ export default function Pagination({ currentPage, totalItems, itemsPerPage, onPa
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2))
     let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1)
     
-    // Adjust start page if we're near the end
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1)
     }
@@ -36,25 +39,6 @@ export default function Pagination({ currentPage, totalItems, itemsPerPage, onPa
         Previous
       </button>
       
-      {/* First Page */}
-      {pageNumbers[0] > 1 && (
-        <>
-          <button
-            onClick={() => onPageChange(1)}
-            className={`px-3 py-2 border border-gray-300 rounded-md text-sm font-medium ${
-              1 === currentPage
-                ? 'bg-blue-500 text-white border-blue-500'
-                : 'bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
-            } dark:border-gray-600`}
-          >
-            1
-          </button>
-          {pageNumbers[0] > 2 && (
-            <span className="px-2 py-2 text-gray-500">...</span>
-          )}
-        </>
-      )}
-      
       {/* Page Numbers */}
       {pageNumbers.map(page => (
         <button
@@ -70,26 +54,6 @@ export default function Pagination({ currentPage, totalItems, itemsPerPage, onPa
         </button>
       ))}
       
-      {/* Last Page */}
-      {pageNumbers[pageNumbers.length - 1] < totalPages && (
-        <>
-          {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
-            <span className="px-2 py-2 text-gray-500">...</span>
-          )}
-          <button
-            onClick={() => onPageChange(totalPages)}
-            className={`px-3 py-2 border border-gray-300 rounded-md text-sm font-medium ${
-              totalPages === currentPage
-                ? 'bg-blue-500 text-white border-blue-500'
-                : 'bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
-            } dark:border-gray-600`}
-          >
-            {totalPages}
-          </button>
-        </>
-      )}
-      
-      {/* Next Button */}
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
@@ -98,7 +62,6 @@ export default function Pagination({ currentPage, totalItems, itemsPerPage, onPa
         Next
       </button>
 
-      {/* Items Count Info */}
       <div className="ml-4 text-sm text-gray-500 dark:text-gray-400">
         Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} items
       </div>
